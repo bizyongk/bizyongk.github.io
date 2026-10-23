@@ -48,6 +48,28 @@
   .tip{background:#FFF8E1;border-left:4px solid #FFC107;border-radius:6px;padding:11px 14px;margin:14px 0;font-size:.95em}
   .warn{background:#FDECEA;border-left:4px solid #E57373;border-radius:6px;padding:11px 14px;margin:14px 0;font-size:.95em}
   a{color:#7B3FA8}
+  .video-guide{margin:0 0 14px}
+  .pick{display:flex;gap:10px}
+  .pick[hidden]{display:none}
+  .pick-btn{flex:1;cursor:pointer;font:inherit;font-weight:800;font-size:1em;color:var(--purple);
+            background:#fff;border:2px solid var(--line);border-radius:12px;padding:14px 8px;line-height:1.3}
+  .pick-btn:hover{border-color:var(--purple2)}
+  .pick-btn.on{color:#fff;background:linear-gradient(90deg,var(--purple),var(--purple2));border-color:transparent}
+  .player{margin-top:16px}
+  .pick[hidden] + .player{margin-top:0}
+  .video-box{position:relative;width:100%;padding-top:56.25%;border-radius:12px;overflow:hidden;background:#000}
+  .video-box iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .video-link{display:inline-block;margin-top:6px;font-size:.86em}
+  .m-modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
+           padding:24px;background:rgba(36,26,51,.55)}
+  .m-modal[hidden]{display:none}
+  .m-box{width:100%;max-width:340px;background:#fff;border-radius:20px;padding:26px 22px 20px;text-align:center;
+         box-shadow:0 14px 36px rgba(60,20,80,.35)}
+  .m-icon{font-size:2.2em;line-height:1}
+  .m-title{font-size:1.15em;font-weight:800;margin:10px 0 8px}
+  .m-text{color:var(--gray);font-size:.95em;margin:0 0 18px}
+  .m-ok{width:100%;cursor:pointer;font:inherit;font-weight:800;color:#fff;border:0;border-radius:12px;padding:13px 0;
+        background:linear-gradient(90deg,var(--purple),var(--purple2))}
   .foot{text-align:center;color:var(--gray);font-size:.88em;margin-top:26px}
   .foot a{margin:0 8px;white-space:nowrap}
   @media (max-width:480px){ .btn{width:100%;padding:18px 0} }
@@ -70,28 +92,18 @@
   </div>
 
   <div class="card">
-    <h2>설치하고 연결하기 — 3단계</h2>
-    <ol>
-      <li><span class="step-title">PC에 설치합니다</span><br>
-        다운로드한 <b>NodeS_Setup.exe</b> 를 실행합니다. 설치 중 <b>바탕화면 바로가기</b>와
-        <b>윈도우 시작 시 자동 실행</b>을 모두 켜 두시길 권합니다. 자동 실행을 켜 두면 PC를 켤 때마다 자동으로 시작됩니다.</li>
-
-      <li><span class="step-title">이 컴퓨터의 이름을 정합니다</span><br>
-        처음 실행하면 이름을 묻습니다. 여러 대를 쓰실 때 구분할 이름(예: 집 PC, 사무실 PC)을 넣어 주세요.
-        나중에 언제든 바꿀 수 있습니다.</li>
-
-      <li><span class="step-title">휴대폰 앱과 연결합니다</span><br>
-        PC 프로그램 위쪽 <b>[모바일 연결]</b>을 누르면 QR 코드가 나옵니다.
-        휴대폰 앱에서 <b>[＋ 컴퓨터 연결하기]</b>를 눌러 그 QR을 비추면 연결이 끝납니다.
-        <div class="meta" style="margin-top:8px">
-          앱이 아직 없으시면 먼저 설치해 주세요 —
-          <a href="https://play.google.com/store/apps/details?id=kr.yongk.pinodes" target="_blank">Google Play에서 Node S (for Pi) 설치</a>
-        </div>
-      </li>
-    </ol>
-
-    <div class="tip">💡 QR 코드는 <b>10분간</b> 유효합니다. 시간이 지났으면 <b>[QR 다시 생성]</b>을 누르세요.<br>
-    💡 여러 대를 보시려면 PC마다 위 과정을 한 번씩 해 주시면 됩니다.</div>
+    <h2>설치 방법 영상</h2>
+    <p class="video-guide" id="videoGuide">사용하시는 <b>인터넷 브라우저</b>를 골라 영상을 보며 따라 해 주세요.</p>
+    <div class="pick">
+      <button type="button" class="pick-btn" data-id="Qxs_liRiq5c" data-url="https://youtu.be/Qxs_liRiq5c"
+              data-browser="edge" data-name="마이크로소프트 엣지">마이크로소프트 엣지</button>
+      <button type="button" class="pick-btn" data-id="0nirWgPNago" data-url="https://www.youtube.com/watch?v=0nirWgPNago"
+              data-browser="chrome" data-name="크롬">크롬</button>
+    </div>
+    <div class="player" id="player" hidden>
+      <div class="video-box" id="videoBox"></div>
+      <a class="video-link" id="videoLink" href="#" target="_blank">YouTube에서 보기</a>
+    </div>
   </div>
 
   <div class="card">
@@ -112,5 +124,68 @@
   </div>
 
 </div>
+<div class="m-modal" id="mobileModal" hidden>
+  <div class="m-box" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="m-icon">💻</div>
+    <div class="m-title" id="mTitle">PC에서 접속해 설치해 주세요</div>
+    <p class="m-text">Node S 설치 파일은 <b>윈도우 PC 전용</b>입니다.<br>
+      휴대폰에서는 설치할 수 없으니, PC에서<br><b>sd.yongk.kr</b> 에 접속해 설치해 주세요.</p>
+    <button type="button" class="m-ok" id="mobileOk">확인</button>
+  </div>
+</div>
+<script>
+  // 휴대폰·태블릿으로 들어오면 'PC에서 설치' 안내 창 (닫으면 페이지는 그대로 볼 수 있음)
+  (function () {
+    var ua = navigator.userAgent || '';
+    var mobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) ||
+                 (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);   // 데스크톱 모드 아이패드
+    if (!mobile) return;
+    var m = document.getElementById('mobileModal');
+    m.hidden = false;
+    document.getElementById('mobileOk').addEventListener('click', function () { m.hidden = true; });
+  })();
+
+  // 지금 쓰는 브라우저가 엣지·크롬이면 그 영상을 처음부터 띄워 두고, 아니면 고르게 한다.
+  //  (엣지 UA 에도 Chrome 이 들어 있어 엣지를 먼저 본다. 웨일·오페라 등은 '모름' 처리)
+  //  페이지 열자마자 소리 있는 자동 재생은 브라우저가 막으므로 처음엔 띄워만 두고, 버튼으로 바꿀 때는 바로 재생.
+  (function () {
+    var ua = navigator.userAgent || '';
+    var mobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) ||
+                 (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    // 휴대폰 브라우저는 PC 에서 쓸 브라우저와 다를 수 있으므로 고르게 한다
+    var mine = mobile ? ''
+             : /Edg\//.test(ua) ? 'edge'
+             : (/Chrome\//.test(ua) && !/OPR\/|Whale\/|SamsungBrowser\//.test(ua) ? 'chrome' : '');
+    var btns = document.querySelectorAll('.pick-btn');
+
+    function show(b, autoplay) {
+      btns.forEach(function (x) { x.classList.toggle('on', x === b); });
+      var box = document.getElementById('videoBox');
+      box.innerHTML = '';
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + b.dataset.id + '?rel=0' + (autoplay ? '&autoplay=1' : '');
+      f.title = b.dataset.name + ' 설치 방법';
+      f.allow = 'autoplay; accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share';
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      f.allowFullscreen = true;
+      box.appendChild(f);
+      document.getElementById('videoLink').href = b.dataset.url;
+      document.getElementById('player').hidden = false;
+    }
+
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        show(b, true);
+        document.getElementById('player').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+      if (b.dataset.browser === mine) {
+        // 엣지·크롬이면 안내 문구·선택 버튼 없이 그 브라우저 영상만 보여 준다
+        document.getElementById('videoGuide').hidden = true;
+        document.querySelector('.pick').hidden = true;
+        show(b, false);
+      }
+    });
+  })();
+</script>
 </body>
 </html>
