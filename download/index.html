@@ -87,8 +87,8 @@
     PC에서 운영 중인 파이 노드의 상태를 휴대폰으로 확인하고,<br>문제가 생기면 알림을 받아 볼 수 있습니다.</p>
 
   <div class="dl">
-    <a class="btn" href="https://github.com/bizyongk/pi-node-s/releases/download/setup/NodeS_Setup.exe">⬇ (PC)설치 파일 다운로드</a>
-    <a class="btn" href="https://play.google.com/store/apps/details?id=kr.yongk.pinodes" target="_blank">⬇ 스마트폰에 설치하기</a>
+    <a class="btn" id="pcBtn" href="https://github.com/bizyongk/pi-node-s/releases/download/setup/NodeS_Setup.exe">⬇ (PC)설치 파일 다운로드</a>
+    <a class="btn" id="appBtn" href="https://play.google.com/store/apps/details?id=kr.yongk.pinodes" target="_blank">⬇ 스마트폰에 설치하기</a>
   </div>
 
   <div class="card">
@@ -135,25 +135,43 @@
   </div>
 
 </div>
-<div class="m-modal" id="mobileModal" hidden>
+<div class="m-modal" id="infoModal" hidden>
   <div class="m-box" role="dialog" aria-modal="true" aria-labelledby="mTitle">
-    <div class="m-icon">💻</div>
-    <div class="m-title" id="mTitle">PC에서 접속해 설치해 주세요</div>
-    <p class="m-text">Node S 설치 파일은 <b>윈도우 PC 전용</b>입니다.<br>
-      휴대폰에서는 설치할 수 없으니, PC에서<br><b>sd.yongk.kr</b> 에 접속해 설치해 주세요.</p>
-    <button type="button" class="m-ok" id="mobileOk">확인</button>
+    <div class="m-icon" id="mIcon"></div>
+    <div class="m-title" id="mTitle"></div>
+    <p class="m-text" id="mText"></p>
+    <button type="button" class="m-ok" id="mOk">확인</button>
   </div>
 </div>
 <script>
-  // 휴대폰·태블릿으로 들어오면 'PC에서 설치' 안내 창 (닫으면 페이지는 그대로 볼 수 있음)
+  // 휴대폰에서 PC 설치 파일 버튼을 누르거나, PC에서 어플 설치 버튼을 누르면 안내 창을 띄운다
   (function () {
     var ua = navigator.userAgent || '';
     var mobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) ||
                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);   // 데스크톱 모드 아이패드
-    if (!mobile) return;
-    var m = document.getElementById('mobileModal');
-    m.hidden = false;
-    document.getElementById('mobileOk').addEventListener('click', function () { m.hidden = true; });
+    var m = document.getElementById('infoModal');
+    function open(icon, title, text) {
+      var ic = document.getElementById('mIcon');
+      ic.textContent = icon;
+      ic.hidden = !icon;
+      document.getElementById('mTitle').textContent = title;
+      document.getElementById('mText').innerHTML = text;
+      m.hidden = false;
+    }
+    document.getElementById('mOk').addEventListener('click', function () { m.hidden = true; });
+    if (mobile) {
+      document.getElementById('pcBtn').addEventListener('click', function (e) {
+        e.preventDefault();
+        open('💻', '컴퓨터에서 다운로드해 주세요',
+             'PC 프로그램은 <b>윈도우 PC 전용</b>입니다.<br>PC에서 <b>sd.yongk.kr</b> 에 접속해 다운로드해 주세요.');
+      });
+    } else {
+      document.getElementById('appBtn').addEventListener('click', function (e) {
+        e.preventDefault();
+        open('', '휴대폰에서 설치해 주세요',
+             '휴대폰 어플은 <b>안드로이드 휴대폰</b>에서 설치합니다.<br>휴대폰에서 <b>sd.yongk.kr</b> 에 접속해 설치해 주세요.');
+      });
+    }
   })();
 
   // 지금 쓰는 브라우저가 엣지·크롬이면 그 영상을 처음부터 띄워 두고, 아니면 고르게 한다.
